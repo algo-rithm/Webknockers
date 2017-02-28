@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">WebKnockers</string>
+    <string name="content_authority">com.webknockers.android.chat</string>
+    <string name="greeting_message">Hello, I\'m Pete, welcome to my website. Let me know if you have any questions?</string>
+    <string name="main_date_label">Created:</string>
+    <string name="main_bttn_delete_chat">DELETE</string>
+    <string name="tmp_web_domain">... waiting on site</string>
+    <string name="label_msg_count">Messages:</string>
+    <string name="label_created_at">Created:</string>
+    <string name="no_chat_rooms">There are NO Active Chat Rooms.</string>
+</resources>

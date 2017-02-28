@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FDD835</color>
+    <color name="colorPrimaryDark">#009688</color>
+    <color name="colorPrimaryLight">#FFF59D</color>
+    <color name="colorAccent">#7C4DFF</color>
+    <color name="colorAccentDark">#6200EA</color>
+    <color name="colorButtonPrimary">#00796B</color>
+    <color name="colorDeleteRed">#BF360C</color>
+    <color name="chat_rooms_background">#80CBC4</color>
+    <color name="card_background">#FFFFFF</color>
+</resources>
