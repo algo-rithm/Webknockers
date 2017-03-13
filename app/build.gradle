@@ -50,7 +50,6 @@ dependencies {
     compile 'com.google.firebase:firebase-database:10.2.0'
     compile 'com.google.firebase:firebase-appindexing:10.2.0'
     compile 'com.google.firebase:firebase-messaging:10.2.0'
-    compile 'com.google.firebase:firebase-config:10.2.0'
     compile 'com.firebaseui:firebase-ui-database:0.4.0'
     //3rd party
     compile 'com.jakewharton:butterknife:8.5.1'
