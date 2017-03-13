@@ -12,12 +12,8 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 public class MyGCMListenerService extends GcmListenerService {
 
-    private static final String TAG = "### MyGcmLstrSrvce ###";
-
     @Override
     public void onMessageReceived( String from, Bundle data ) {
 
-        Log.d(TAG, "MESSAGE RECIEVED");
-        //Toast.makeText(this, data.get("message").toString(), Toast.LENGTH_LONG ).show();
     }
 }

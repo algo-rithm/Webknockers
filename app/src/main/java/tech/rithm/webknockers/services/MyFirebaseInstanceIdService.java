@@ -12,14 +12,12 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
-    private static final String TAG = "## IIDService ##";
 
 
     @Override
     public void onTokenRefresh() {
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed TOKEN: " + refreshedToken);
 
         startService(new Intent(this, RegistrationIntentService.class));
     }

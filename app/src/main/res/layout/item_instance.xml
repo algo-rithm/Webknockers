@@ -31,7 +31,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="16dp"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/cd_message_delete"/>
 
         <TextView
             android:text="@string/tmp_web_domain"
@@ -67,13 +68,13 @@
             app:srcCompat="@mipmap/fist_grey"
             android:id="@+id/fist_logo"
             app:layout_constraintTop_toBottomOf="@+id/count"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:contentDescription="@string/app_name"/>
 
         <TextView
             android:text="@string/label_created_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:allowUndo="true"
             android:id="@+id/textView7"
             app:layout_constraintTop_toBottomOf="@+id/web_domain"
             app:layout_constraintRight_toLeftOf="@+id/main_timestamp"
@@ -81,7 +82,6 @@
             android:layout_marginRight="8dp" />
 
         <TextView
-            android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/main_timestamp"
@@ -90,7 +90,6 @@
             tools:text="3 hours ago" />
 
         <TextView
-            android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/msg_ago"

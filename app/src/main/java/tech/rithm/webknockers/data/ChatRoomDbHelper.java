@@ -14,7 +14,7 @@ public class ChatRoomDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "chat_rooms.db";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     public ChatRoomDbHelper( Context context ) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,6 +27,8 @@ public class ChatRoomDbHelper extends SQLiteOpenHelper {
                 ChatEntry._ID                       + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ChatEntry.COLUMN_DATE               + " INTEGER NOT NULL, " +
                 ChatEntry.COLUMN_LAST_READ          + " INTEGER NOT NULL, " +
+                ChatEntry.COLUMN_HAS_NEW_MSG        + " INTEGER NOT NULL, " +
+                ChatEntry.COLUMN_NUM_MSGS           + " INTEGER NOT NULL, " +
                 ChatEntry.COLUMN_WEBKNOCKER_TABLE   + " TEXT"+ ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_CHAT_TABLE);

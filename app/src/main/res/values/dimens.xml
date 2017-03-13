@@ -5,4 +5,6 @@
     <dimen name="list_side_margin">16dp</dimen>
     <dimen name="list_toolbar_side_margin">16dp</dimen>
     <dimen name="msg_count_text_size">16sp</dimen>
+    <dimen name="app_bar_container_height">80dp</dimen>
+    <dimen name="app_bar_elevation">8dp</dimen>
 </resources>

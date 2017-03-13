@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -34,20 +36,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String MSG_ID = "msg_id";
     public static final String MSG = "msg";
     public static final String TOKEN = "token";
+    public final String MSG_TOKEN = "WantToChitChat";
     private static int mId = 1;
 
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // Handle data payload of FCM messages.
-        Log.d(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
-        Log.d(TAG, "FCM Notification Message: " + remoteMessage.getNotification());
-        Log.d(TAG, "FCM Data Message: " + remoteMessage.getData());
 
         String id = remoteMessage.getMessageId();
-        String msg = remoteMessage.getData().get("msg");
-        String token = remoteMessage.getData().get("token");
+        String msg = remoteMessage.getData().get(MSG);
+        String token = remoteMessage.getData().get(TOKEN);
 
-        if ( msg.equals("WantToChitChat")) {
-            Log.d(TAG, "SENDING Intent to UI");
+        if ( msg.equals(MSG_TOKEN)) {
 
             try {
                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -60,6 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             NotificationManager notificationManager = (NotificationManager)
                     this.getSystemService(Context.NOTIFICATION_SERVICE);
+
             Intent notificationIntent = new Intent(getApplicationContext(), InitChatActivity.class);
             Uri uri = ChatRoomContract.ChatEntry.buildChatUriWithWebknockerTable(token);
             notificationIntent.putExtra(TOKEN, token);
@@ -69,9 +68,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("Webknockers")
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText("New WEB instance!!"))
-                    .setContentText("New WEB instance!!");
+                    .setContentTitle(getString(R.string.app_name))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notif_msg)))
+                    .setContentText(getString(R.string.notif_msg));
             mBuilder.setContentIntent(contentIntent);
             notificationManager.notify( ++mId, mBuilder.build());
 

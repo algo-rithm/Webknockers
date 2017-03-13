@@ -84,7 +84,6 @@ public class ChatRoomProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        Log.d(TAG, "<--- new Insert --->");
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         long id=0;
         switch (sUriMatcher.match(uri)) {
@@ -113,14 +112,12 @@ public class ChatRoomProvider extends ContentProvider {
                         selectionArgs);
                 break;
             case CODE_CHAT_WITH_TABLE:
-                Log.d(TAG, "<-- delete called -->");
                 String web_row = uri.getLastPathSegment();
                 String[] selectionArguments = new String[] {web_row};
                 numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
                         ChatEntry.TABLE_NAME,
                         ChatEntry.COLUMN_WEBKNOCKER_TABLE + " = ? ",
                         selectionArguments);
-                Log.d(TAG, "<-- deleted " + numRowsDeleted + " rows-->");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown ur: " + uri);

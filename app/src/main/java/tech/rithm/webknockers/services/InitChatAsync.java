@@ -24,7 +24,7 @@ public class InitChatAsync extends AsyncTask<String, Void, Void> {
 
         Messaging.Builder builder = new Messaging.Builder(AndroidHttp.newCompatibleTransport(),
                 new AndroidJsonFactory(), null)
-                .setRootUrl("https://taboochat-8fc33.appspot.com/_ah/api/");
+                .setRootUrl(RegistrationIntentService.ROOT_URL);
         Messaging messager = builder.build();
         try{
             messager.sendToAppMessage(message, to, from).execute();

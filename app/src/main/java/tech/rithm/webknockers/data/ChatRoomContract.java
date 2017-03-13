@@ -21,6 +21,8 @@ public class ChatRoomContract {
         public static final String TABLE_NAME = "chat";
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_LAST_READ = "last_read";
+        public static final String COLUMN_HAS_NEW_MSG = "has_new_msg";
+        public static final String COLUMN_NUM_MSGS = "num_msgs";
         public static final String COLUMN_WEBKNOCKER_TABLE = "webknocker_table";
 
         public static Uri buildChatUriWithWebknockerTable(String table) {

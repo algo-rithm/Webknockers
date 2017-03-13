@@ -20,7 +20,7 @@ public class FireBaseChatAdapter extends FirebaseRecyclerAdapter<WebChatMessage,
 
     private Context mContext;
 
-    public FireBaseChatAdapter(Class modelClass, int layout, Class viewHolderClass, DatabaseReference snapshots, Context context) {
+    FireBaseChatAdapter(Class<WebChatMessage> modelClass, int layout, Class<FireViewHolder> viewHolderClass, DatabaseReference snapshots, Context context) {
         super(modelClass, layout, viewHolderClass, snapshots);
         mContext = context;
     }

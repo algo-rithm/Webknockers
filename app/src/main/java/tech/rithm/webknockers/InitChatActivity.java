@@ -1,11 +1,15 @@
 package tech.rithm.webknockers;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import butterknife.OnClick;
 import tech.rithm.webknockers.data.ChatRoomContract;
 import tech.rithm.webknockers.models.WebChatMessage;
 import tech.rithm.webknockers.services.InitChatAsync;
+import tech.rithm.webknockers.widget.ChatWidgetProvider;
 
 /**
  * Created by rithm on 2/17/2017.
@@ -33,11 +38,9 @@ import tech.rithm.webknockers.services.InitChatAsync;
 public class InitChatActivity extends AppCompatActivity {
 
     public static final String TOKEN = "com.webknockers.token";
-    private static final String TAG = "**InitChatActvy**";
+    private static final String MESSAGE_CHILD = "/messages";
 
     private DatabaseReference mFireBase;
-    private FirebaseAuth mAuth;
-    private FirebaseUser mFirebaseUser;
     private String webInstanceToken;
     private String userName;
     private String userPhotoUrl;
@@ -57,29 +60,29 @@ public class InitChatActivity extends AppCompatActivity {
             webInstanceToken = uri.getLastPathSegment();
         }
 
-
-        Log.d(TAG, "onCreate - " + webInstanceToken);
+        FirebaseUser mFirebaseUser;
+        FirebaseAuth mAuth;
         mFireBase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mAuth.getCurrentUser();
         if ( mFirebaseUser == null ) {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
-            return;
         } else {
             userName = mFirebaseUser.getDisplayName();
             if (mFirebaseUser.getPhotoUrl() != null){
                 userPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
         }
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String greeting = sharedPrefs.getString(getString(R.string.key_greeting), getString(R.string.greeting_message));
+        greeting_msg_et.setText(greeting);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        //webInstanceToken = getIntent().getStringExtra(TOKEN);
-        Log.d(TAG, "onNewIntent - " + webInstanceToken);
         setIntent(intent);
     }
 
@@ -94,35 +97,28 @@ public class InitChatActivity extends AppCompatActivity {
         long dateTimeMillis = System.currentTimeMillis();
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
-        Log.d(TAG, "inserting row");
         ContentValues chatValues = new ContentValues();
         chatValues.put(ChatRoomContract.ChatEntry.COLUMN_DATE, dateTimeMillis);
         chatValues.put(ChatRoomContract.ChatEntry.COLUMN_LAST_READ, dateTimeMillis);
         chatValues.put(ChatRoomContract.ChatEntry.COLUMN_WEBKNOCKER_TABLE, uuid);
+        chatValues.put(ChatRoomContract.ChatEntry.COLUMN_HAS_NEW_MSG, 0);
+        chatValues.put(ChatRoomContract.ChatEntry.COLUMN_NUM_MSGS, 1);
         ContentResolver chatResolver = getContentResolver();
             chatResolver.insert(ChatRoomContract.ChatEntry.CONTENT_URI, chatValues);
 
         WebChatMessage webChatMessage = new WebChatMessage(greeting_msg,
                 userName, userPhotoUrl, dateTimeMillis);
-        mFireBase.child(uuid + "/messages").push().setValue(webChatMessage);
+        mFireBase.child(uuid + MESSAGE_CHILD).push().setValue(webChatMessage);
 
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, ChatWidgetProvider.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appIds, R.id.chat_widget_list);
 
-        Log.d(TAG, "sending msg to website...");
         String[] params = {uuid, webInstanceToken, uuid};
         new InitChatAsync().execute(params);
 
         Intent chatRooms = new Intent(InitChatActivity.this, MainActivity.class);
         startActivity(chatRooms);
         finish();
-
-/*
-        Intent chatRoom = new Intent(InitChatActivity.this, ChatActivity.class);
-        Uri uriForChatRoom = ChatRoomContract.ChatEntry.buildChatUriWithWebknockerTable(uuid);
-        chatRoom.setData(uriForChatRoom);
-        startActivity(chatRoom);
-        finish();
-
-        */
-
     }
 }

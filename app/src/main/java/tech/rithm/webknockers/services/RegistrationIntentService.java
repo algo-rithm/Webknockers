@@ -28,6 +28,10 @@ public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService ###";
     private static final String[] TOPICS = {"global"};
+    private final String KEY_SENT_TOKEN = "SENT_TOKEN";
+    public static final String ROOT_URL = "https://taboochat-8fc33.appspot.com/_ah/api/";
+    private final String CHILD_APP_INSTANCE = "app_instance_token";
+    private final String CHILD_TOPICS = "/topics/";
 
     public RegistrationIntentService() {
         super(TAG);
@@ -39,13 +43,8 @@ public class RegistrationIntentService extends IntentService {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
-            //InstanceID instanceID = InstanceID.getInstance(this);
-            //String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
-                   // GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
             String token = FirebaseInstanceId.getInstance().getToken();
-
-            Log.i(TAG, "GCM Registration Token: " + token);
 
             sendRegistrationToServer(token);
 
@@ -53,9 +52,9 @@ public class RegistrationIntentService extends IntentService {
 
             storeToken(token);
 
-            sharedPreferences.edit().putBoolean("SENT_TOKEN", true).apply();
+            sharedPreferences.edit().putBoolean(KEY_SENT_TOKEN, true).apply();
         } catch ( Exception e ) {
-            Log.d(TAG, "Failed to complete token refresh", e);
+            Log.d(TAG, getString(R.string.error_token), e);
         }
 
 
@@ -64,7 +63,7 @@ public class RegistrationIntentService extends IntentService {
     private void sendRegistrationToServer( String token ) throws IOException {
         Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(),
                 new AndroidJsonFactory(), null)
-                .setRootUrl("https://taboochat-8fc33.appspot.com/_ah/api/");
+                .setRootUrl(ROOT_URL);
         Registration registration = builder.build();
 
         registration.register(token).execute();
@@ -73,13 +72,13 @@ public class RegistrationIntentService extends IntentService {
     private void storeToken(String token){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        myRef.child("app_instance_token").setValue(token);
+        myRef.child(CHILD_APP_INSTANCE).setValue(token);
     }
 
     private void subscribeTopics(String token) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         for ( String topic : TOPICS ) {
-            pubSub.subscribe(token, "/topics/" + topic, null);
+            pubSub.subscribe(token, CHILD_TOPICS + topic, null);
         }
     }
 }

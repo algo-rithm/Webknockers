@@ -1,48 +1,42 @@
 package tech.rithm.webknockers;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.net.Uri;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tech.rithm.webknockers.data.ChatRoomContract;
-import tech.rithm.webknockers.models.WebInstanceId;
 import tech.rithm.webknockers.services.MyFirebaseMessagingService;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>,
-        ChatRoomAdapter.ChatRoomAdapterOnClickHandler,
+        ChatRoomListingFragment.Callback,
         GoogleApiClient.OnConnectionFailedListener {
+    private static final String CHAT_FRAGMENT_TAG = "CFTAG";
+    private boolean mTwoPane;
 
-    private static final int ID_CHAT_LOADER = 88;
     public static final String[] CHAT_ROOM_PROJECTION = {
             ChatRoomContract.ChatEntry.COLUMN_DATE,
             ChatRoomContract.ChatEntry.COLUMN_LAST_READ,
@@ -52,38 +46,70 @@ public class MainActivity extends AppCompatActivity implements
     public static final int INDEX_LAST_READ = 1;
     public static final int INDEX_CHAT_TABLE = 2;
 
-    private static final String CHAT_ACTION = "tech.rithm.webknocker.chat_action";
-    private static final String ANONYMOUS = "anonymous";
     private BroadcastReceiver chatReciever;
 
-    private LinearLayoutManager linearLayoutManager;
-    private DatabaseReference mFireDatabase;
-    private String mUsername;
-    private String mPhotoUrl;
-    private FirebaseUser mFirebaseUser;
-    private GoogleSignInAccount acct;
-    private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private GoogleApiClient googleApiClient;
-
+    private FragmentManager fm;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.instance_recycler) RecyclerView mRecyclerView;
-    @BindView(R.id.no_chat_rooms) TextView mNoChatRooms;
-    private ChatRoomAdapter mChatRoomAdapter;
-    private int mPosition = RecyclerView.NO_POSITION;
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                goSettings();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void goSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        //getSupportActionBar().setIcon(R.drawable.webknocker_header);
         getSupportActionBar().setTitle("");
+        fm = getSupportFragmentManager();
+        ChatRoomListingFragment fragment_listing;
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        mUsername = ANONYMOUS;
+        fragment_listing = (ChatRoomListingFragment) fm.findFragmentById(R.id.chat_listing_container);
+        if (fragment_listing == null) {
+            fragment_listing = new ChatRoomListingFragment();
+            fm.beginTransaction().add(R.id.chat_listing_container, fragment_listing)
+                    .commit();
+        }
+
+        if (findViewById(R.id.chat_room_container) != null) {
+            Fragment fragment_chat = fm.findFragmentById(R.id.chat_room_container);
+            if (fragment_chat == null) {
+                fragment_chat = new ChatActivityFragment();
+                fm.beginTransaction().add(R.id.chat_room_container, fragment_chat)
+                .commit();
+            }
+            mTwoPane = true;
+        }
+        else {
+            mTwoPane = false;
+        }
+
+        FirebaseUser mFirebaseUser;
+        FirebaseAuth auth;
+
         auth = FirebaseAuth.getInstance();
         mFirebaseUser = auth.getCurrentUser();
 
@@ -91,31 +117,14 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(new Intent(this, SignInActivity.class));
             finish();
             return;
-        } else {
-            mUsername = mFirebaseUser.getDisplayName();
-            if ( mFirebaseUser.getPhotoUrl() != null ) {
-                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-            }
         }
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
-
-        mChatRoomAdapter = new ChatRoomAdapter(this, this);
-
-        linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(false);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(mChatRoomAdapter);
 
         chatReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
                 String token = intent.getStringExtra(MyFirebaseMessagingService.TOKEN);
-                Toast.makeText(MainActivity.this, "NEW WEBSITE INSTANCE MESSAGE -\n" + token, Toast.LENGTH_LONG)
+                Toast.makeText(MainActivity.this, R.string.new_web_instance_msg, Toast.LENGTH_LONG)
                         .show();
 
                 Intent start_init_chat = new Intent(MainActivity.this, InitChatActivity.class);
@@ -123,8 +132,6 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(start_init_chat);
             }
         };
-
-        getSupportLoaderManager().initLoader(ID_CHAT_LOADER, null, this);
     }
 
     @Override
@@ -137,7 +144,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(ID_CHAT_LOADER, null, this);
+        ChatActivityFragment caf = (ChatActivityFragment)getSupportFragmentManager().findFragmentByTag(CHAT_FRAGMENT_TAG);
+        if(caf != null){
+            if (caf.getArguments() != null && caf.getArguments().containsKey(ChatActivityFragment.DETAIL_URI)){
+                Uri uri = caf.getArguments().getParcelable(ChatActivityFragment.DETAIL_URI);
+                caf.onChatRoomChanged(uri);
+            }
+        }
     }
 
     @Override
@@ -147,60 +160,23 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onClick(String chat_room) {
-        Intent chatRoom = new Intent(MainActivity.this, ChatActivity.class);
-        Uri uriForChatRoom = ChatRoomContract.ChatEntry.buildChatUriWithWebknockerTable(chat_room);
-        chatRoom.setData(uriForChatRoom);
-        startActivity(chatRoom);
-    }
+    public void onChatSelected(Uri uri){
+        if (mTwoPane){
+            Bundle args = new Bundle();
+            args.putParcelable(ChatActivityFragment.DETAIL_URI, uri);
+            ChatActivityFragment fragment = new ChatActivityFragment();
+            fragment.setArguments(args);
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 69:
-
+            getSupportFragmentManager().beginTransaction().replace(R.id.chat_room_container, fragment, CHAT_FRAGMENT_TAG).commit();
+        } else {
+            Intent chatRoom = new Intent(this, ChatActivity.class);
+            chatRoom.setData(uri);
+            startActivity(chatRoom);
         }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-        switch (loaderId) {
-            case ID_CHAT_LOADER:
-                Uri chatQuery = ChatRoomContract.ChatEntry.CONTENT_URI;
-                String  sortOrder = ChatRoomContract.ChatEntry.COLUMN_DATE + " ASC";
-                return new CursorLoader(this,
-                        chatQuery,
-                        CHAT_ROOM_PROJECTION,
-                        null,
-                        null,
-                        sortOrder);
-            default:throw new RuntimeException("Loader not implemented");
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        if (data.getCount() == 0){
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            mNoChatRooms.setVisibility(View.VISIBLE);
-        }
-
-        mChatRoomAdapter.swapCursor(data);
-        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-        mRecyclerView.smoothScrollToPosition(mPosition);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mChatRoomAdapter.swapCursor(null);
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        Log.d("TAG", "onConnectionFailed:" + connectionResult);
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.google_firebase_error , Toast.LENGTH_SHORT).show();
     }
 }

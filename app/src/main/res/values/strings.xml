@@ -1,11 +1,35 @@
 <resources>
-    <string name="app_name">WebKnockers</string>
-    <string name="content_authority">com.webknockers.android.chat</string>
-    <string name="greeting_message">Hello, I\'m Pete, welcome to my website. Let me know if you have any questions?</string>
+    <string name="app_name" translatable="false">WebKnockers</string>
+    <string name="content_authority" translatable="false">com.webknockers.android.chat</string>
+    <string name="greeting_message">Hello, welcome to my website. Let me know if you have any questions?</string>
     <string name="main_date_label">Created:</string>
     <string name="main_bttn_delete_chat">DELETE</string>
     <string name="tmp_web_domain">... waiting on site</string>
     <string name="label_msg_count">Messages:</string>
     <string name="label_created_at">Created:</string>
+    <string name="label_greeting_msg">Greeting Message:</string>
+    <string name="label_sign_in">Sign In</string>
     <string name="no_chat_rooms">There are NO Active Chat Rooms.</string>
+    <string name="pref_auto_reply">Auto Reply</string>
+    <string name="pref_auto_reply_summary">Turn on/off Auto response to website instances.</string>
+    <string name="pref_greeting_msg">Default Greeting</string>
+    <string name="pref_greeting_msg_summary">Set the default greeting message.</string>
+    <string name="menu_settings">Settings</string>
+    <string name="new_message">NEW MESSAGE</string>
+    <string name="widget_last_read">Last Read:</string>
+    <string name="google_firebase_error">Google Play Services Error</string>
+    <string name="google_signin_error">Google Sign in failed</string>
+    <string name="bttn_start_chat">Start Chat</string>
+    <string name="bttn_start_chat_cd">Start Chat</string>
+    <string name="bttn_send_chat">SEND</string>
+    <string name="cd_message_delete">Delete Chat Room</string>
+    <string name="cd_profile">Profile Image</string>
+    <string name="key_reply">pref_auto_reply</string>
+    <string name="key_greeting">pref_greeting_msg</string>
+    <string name="new_web_instance_msg">New Website MESSAGE!</string>
+    <string name="error_token">Failed to complete token refresh</string>
+    <string name="notif_msg">New WEB instance!!</string>
+    <string name="sign_in_or">Or</string>
+    <string name="sign_in_anon">Anonymously</string>
+    <string name="sigin_in_anon_failed">Authentication Failed</string>
 </resources>
