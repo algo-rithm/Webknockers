@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -35,6 +36,7 @@ public class SignInActivity extends AppCompatActivity implements
 
     SignInButton mSignInButton;
     Button mAnonSignIn;
+    ProgressBar mProgressBar;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -66,22 +68,15 @@ public class SignInActivity extends AppCompatActivity implements
         mSignInButton.setOnClickListener(this);
         mAnonSignIn = (Button) findViewById(R.id.bttn_anon);
         mAnonSignIn.setOnClickListener(this);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar2);
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
 
-        // [START auth_state_listener]
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
+
             }
         };
 
@@ -100,6 +95,7 @@ public class SignInActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(View v) {
+        mProgressBar.setVisibility(View.VISIBLE);
         switch (v.getId()) {
             case R.id.sign_in_button:
                 signIn();
@@ -139,7 +135,8 @@ public class SignInActivity extends AppCompatActivity implements
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                Log.e(TAG, getString(R.string.google_signin_error));
+                Toast.makeText(this, R.string.google_signin_error, Toast.LENGTH_LONG).show();
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
         }
     }

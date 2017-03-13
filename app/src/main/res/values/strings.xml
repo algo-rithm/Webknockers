@@ -18,7 +18,7 @@
     <string name="new_message">NEW MESSAGE</string>
     <string name="widget_last_read">Last Read:</string>
     <string name="google_firebase_error">Google Play Services Error</string>
-    <string name="google_signin_error">Google Sign in failed</string>
+    <string name="google_signin_error">Google Error, Sign in failed, Try again later.</string>
     <string name="bttn_start_chat">Start Chat</string>
     <string name="bttn_start_chat_cd">Start Chat</string>
     <string name="bttn_send_chat">SEND</string>
