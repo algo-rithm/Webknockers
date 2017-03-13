@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:background="#FFFFFF" />
+            android:background="@color/chat_rooms_background" />
         <!-- "Fragment B" -->
         <FrameLayout
             android:id="@+id/chat_room_container"

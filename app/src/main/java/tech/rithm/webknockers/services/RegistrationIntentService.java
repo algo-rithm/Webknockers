@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import tech.rithm.webknockers.R;
 import tech.rithm.webknockers.backend.registration.Registration;
+import tech.rithm.webknockers.models.AppInstanceId;
 
 /**
  * Created by rithm on 2/13/2017.
@@ -30,7 +31,7 @@ public class RegistrationIntentService extends IntentService {
     private static final String[] TOPICS = {"global"};
     private final String KEY_SENT_TOKEN = "SENT_TOKEN";
     public static final String ROOT_URL = "https://taboochat-8fc33.appspot.com/_ah/api/";
-    private final String CHILD_APP_INSTANCE = "app_instance_token";
+    private final String CHILD_APP_INSTANCE = "app_instance_tokens";
     private final String CHILD_TOPICS = "/topics/";
 
     public RegistrationIntentService() {
@@ -72,7 +73,10 @@ public class RegistrationIntentService extends IntentService {
     private void storeToken(String token){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        myRef.child(CHILD_APP_INSTANCE).setValue(token);
+        AppInstanceId appInstanceId = new AppInstanceId();
+        appInstanceId.setApp_instance_token(token);
+        myRef.child(CHILD_APP_INSTANCE).push().setValue(appInstanceId);
+        //myRef.child(CHILD_APP_INSTANCE).setValue(token);
     }
 
     private void subscribeTopics(String token) throws IOException {

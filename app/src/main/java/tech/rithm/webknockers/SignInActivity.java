@@ -47,9 +47,7 @@ public class SignInActivity extends AppCompatActivity implements
         super.onStart();
         mFirebaseAuth.addAuthStateListener(mAuthListener);
     }
-    // [END on_start_add_listener]
 
-    // [START on_stop_remove_listener]
     @Override
     public void onStop() {
         super.onStop();
