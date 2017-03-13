@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "taboochat-8fc33",
+  "private_key_id": "38bdf58ce485d707d7f453499410135f231e2dd0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCvInQ0RPVHjwj0\nd3/5RlI0lphT+AxaUFEcgn04XdifonWdOiBYbBcaQ+PeaSIF2u7nsccmuU4Td/BO\n9C5eETYGS12J+iFJwgvGrbNPT6fiGo9Ox8jhPLY9tPmBgPb3xCLzqNuBm8yBEk5v\n3uZANGGefRidRUyZmwWBlyq8u7XS85ZufDtFVZhArT+WtD8eGBtIiDZ2DgQ9YqHi\noj0qMHfX4EFn/nInv9aUeLIhXrm0bS9bVcJWegscTg0fO1oMWpY44NQCdpDi2Z42\neZOtFVvW8z63HXJJjK4TICM8yBzqA+aeXoVPE67fdaq0xKm+j7WP8IWHPa1KG5jR\nZ43vauQPAgMBAAECggEAUWzNZjfhaiHAYhjlMPpW4ghaTj/3Tk4lSAILQhevzZh0\n4mLSAwpOO3HxEckDfoFpreNj2kcxW6/Z1HuGy0lpOsfzd2EJ9Qb4/qhnw6ofPepn\nUpNkfAQEHvBzSJizOkLAlVSeqcXL8P6X5T9XAebYtB0pQoWjtY7zomqr/g+v26GM\nDp0NwwB/KFhNSeCmSVt+BWgMXGr2hmyDg7JfSy7Hy0Ha5lU8X0ghBjbeeur68dWN\nuY0HPKf3MJPJHfYB9eWNGTQwokv+yzKWq+9poZBOwMr5SHZ6nhPSVT8+KacQ54EW\n0zZUJGPz1IcFQ2DP7OuvFt2R5v0ROYuy7lNBWi8ggQKBgQDY2bOD7Cdbm+SsSXjr\niTJKBMurZAGpE91DgCN/TkAhDaoeUFYIpGyT6ACf/1CEUqVm77RfgSoB9BRjBROq\nuQgXOmVvlsMASNxTl8x1lWx2oXWen1v5oeY99hn7+CzT1w+CT1FLhx1mRAZ5rLHw\nhVY/0yEZFPjJkEZQoxyX8TfnrwKBgQDOwL/Op3t7GEtxhntDGPDYf9Mt7N40vOlq\nrt4Xuj9S24nq5nTR25stLePKq37CSd1t7L3T31nZqocL96Xt+Cr3USTbJkf/PfIN\nFNIBMvuMdfwJa9vcQsaLuq1efkhJ6M/O21Ed7oq5Hmjop+gVEr93kILLKZpd4a7d\nh4Rytm2BoQKBgQDWWiv3BaLKDUl3fJEI0m9hd2gUHSD/DuGy7aEpICKICcfVezfw\nBwhFFBo6Ddh7VG6nV98GYNkzYSAd2VDde1WiEFlgerh7OYqBHxY+TNwQT/3CNGho\nVD8RlImO5nz5UibEer8zV3YaNrfn4mtqA4OER6D5+B8Mr46x+uoyz4ChhQKBgQC2\nO/SUTNEs9YQB41wgDwqyeTCFSUOuTlia3NkLJvGLsdAFiO2sz5keIFWonLJUw9B1\nhHbpGfPTRFhWNwk9EEGmzhHjTAGnu0zvNMvJnMtVyeTF1RjsMrtYC8mmAT7sTlVk\nabE85bXGZ0Rm1SBd+rFizLBMLDZQy4xa3Ijkp2EsIQKBgQDFWiMd5qV4qU8r1W02\nPn7lchT1t2u7PV1KOTP9pRZ7Ojs/19SdlijlnUbJfpR4I6qVOa4o5VhOjovlrEvA\nPfhRAmNfcKiaV8RIT0LsqP7q3JthbbbccJZr6savwGWlSNu0Luzs2EhMiAA1pBIM\nVgMPW1xrEgC2V50giFfibWdULA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "webknockers-backend-servlet@taboochat-8fc33.iam.gserviceaccount.com",
+  "client_id": "108333922034935015631",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/webknockers-backend-servlet%40taboochat-8fc33.iam.gserviceaccount.com"
+}
